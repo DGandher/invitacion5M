@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Promo Adhys 2026 | Politécnico Regional del Centro</title>
+
+    <!-- Fuentes Elegantes de Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
+
+    <!-- Librería para el efecto Confeti -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <style>
+        :root {
+            --primary: #0a192f;
+            --accent: #d4af37;
+            --accent-light: #f3e5ab;
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --text-light: #f8fafc;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--primary);
+            color: var(--text-light);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            background-image: radial-gradient(circle at 50% 50%, rgba(212, 175, 55, 0.15) 0%, transparent 80%);
+            overflow-x: hidden;
+        }
+
+        /* ----- PANTALLA INICIAL: SOBRE DE CARTA ----- */
+        .envelope-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: #070f1e;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 1s ease, visibility 1s ease;
+        }
+
+        .envelope-card {
+            background: linear-gradient(145deg, #132238, #0a1424);
+            border: 2px solid var(--accent);
+            border-radius: 16px;
+            padding: 40px 30px;
+            text-align: center;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.7), 0 0 20px rgba(212, 175, 55, 0.2);
+            max-width: 400px;
+            width: 90%;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .envelope-card:hover {
+            transform: scale(1.03);
+        }
+
+        .wax-seal {
+            font-size: 3.5rem;
+            margin-bottom: 15px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        .btn-open {
+            margin-top: 20px;
+            background: linear-gradient(135deg, #d4af37, #b8860b);
+            color: var(--primary);
+            border: none;
+            padding: 12px 28px;
+            border-radius: 25px;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4);
+        }
+
+        /* Ocultar el sobre al abrir */
+        .envelope-overlay.opened {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        /* ----- CONTENEDOR PRINCIPAL ----- */
+        .container {
+            max-width: 600px;
+            width: 100%;
+            background: rgba(15, 23, 42, 0.85);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: 16px;
+            padding: 30px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+            text-align: center;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 1s ease 0.3s, transform 1s ease 0.3s;
+        }
+
+        .container.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        h1, h2, h3 {
+            font-family: 'Cinzel', serif;
+            color: var(--accent);
+            margin-bottom: 10px;
+        }
+
+        h1 { font-size: 2rem; }
+        p { color: #cbd5e1; font-size: 0.95rem; margin-bottom: 20px; }
+
+        /* Estilos de la Cuenta Regresiva */
+        .countdown {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 25px 0;
+        }
+
+        .time-box {
+            background: var(--card-bg);
+            border: 1px solid var(--accent);
+            border-radius: 8px;
+            padding: 10px;
+            min-width: 65px;
+        }
+
+        .time-box span {
+            display: block;
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: var(--accent-light);
+        }
+
+        .time-box label {
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #94a3b8;
+        }
+
+        /* Botón de Google Maps */
+        .location-section {
+            margin: 25px 0;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 12px;
+            border: 1px dashed rgba(212, 175, 55, 0.4);
+        }
+
+        .btn-map {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #1e293b;
+            color: var(--accent);
+            border: 1px solid var(--accent);
+            padding: 12px 24px;
+            border-radius: 30px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            cursor: pointer;
+        }
+
+        .btn-map:hover {
+            background: var(--accent);
+            color: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(212, 175, 55, 0.4);
+        }
+
+        /* Formulario */
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            text-align: left;
+            margin-top: 20px;
+        }
+
+        label {
+            font-size: 0.85rem;
+            color: var(--accent-light);
+            font-weight: 600;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid #334155;
+            border-radius: 8px;
+            color: #fff;
+            font-size: 0.95rem;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        input:focus, select:focus {
+            border-color: var(--accent);
+        }
+
+        option {
+            background-color: #0f172a;
+            color: #fff;
+        }
+
+        .btn-submit {
+            background: linear-gradient(135deg, #d4af37, #b8860b);
+            color: var(--primary);
+            border: none;
+            padding: 14px;
+            border-radius: 8px;
+            font-weight: 700;
+            cursor: pointer;
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 10px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(212, 175, 55, 0.4);
+        }
+
+        #mensaje-confirmacion {
+            display: none;
+            margin-top: 15px;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            text-align: center;
+        }
+
+        .exito { background: rgba(34, 197, 94, 0.2); color: #4ade80; border: 1px solid #22c55e; }
+        .error { background: rgba(239, 68, 68, 0.2); color: #f87171; border: 1px solid #ef4444; }
+
+        /* Botón Flotante de Música */
+        .music-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--accent);
+            color: var(--primary);
+            border: none;
+            border-radius: 50%;
+            width: 48px;
+            height: 48px;
+            font-size: 20px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            transition: transform 0.2s;
+        }
+
+        .music-btn:hover {
+            transform: scale(1.1);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- OVERLAY DE LA CARTA / SOBRE DE INVITACIÓN -->
+    <div class="envelope-overlay" id="envelopeOverlay">
+        <div class="envelope-card" onclick="openInvitation()">
+            <div class="wax-seal">✉️</div>
+            <h2 style="margin-bottom: 5px;">PROMO ADHYS 2026</h2>
+            <p style="font-size: 0.85rem; color: #a1a1aa;">I.E. Politécnico Regional del Centro</p>
+            <p style="margin-top: 15px; color: #f3e5ab; font-style: italic;">Tienes una invitación especial...</p>
+            <button class="btn-open">Abrir Invitación</button>
+        </div>
+    </div>
+
+    <!-- CONTENIDO PRINCIPAL DE LA INVITACIÓN -->
+    <div class="container" id="mainContainer">
+        <h1>PROMO ADHYS 2026</h1>
+        <p>I.E. Politécnico Regional del Centro - 5to M</p>
+
+        <!-- Cuenta Regresiva -->
+        <div class="countdown">
+            <div class="time-box"><span id="days">00</span><label>Días</label></div>
+            <div class="time-box"><span id="hours">00</span><label>Horas</label></div>
+            <div class="time-box"><span id="minutes">00</span><label>Min</label></div>
+            <div class="time-box"><span id="seconds">00</span><label>Seg</label></div>
+        </div>
+
+        <!-- Sección de Ubicación con Botón a Google Maps -->
+        <div class="location-section">
+            <h3>📍 Lugar del Evento</h3>
+            <p style="margin-bottom: 12px; font-size: 0.85rem;">Local Recepciones "EL HUARANGAL" / El Tambo, Huancayo</p>
+            
+            <a href="https://maps.app.goo.gl/YcQLvxysGjAZB7RcA" target="_blank" class="btn-map">
+                🗺️ Ver Ubicación en Google Maps
+            </a>
+        </div>
+
+        <!-- Formulario RSVP (Sin Teléfono) -->
+        <h2>Confirmar Asistencia</h2>
+        <form id="rsvpForm">
+            <div>
+                <label for="nombre">Nombre Completo:</label>
+                <input type="text" id="nombre" name="nombre" required placeholder="Ej: Juan Pérez">
+            </div>
+
+            <div>
+                <label for="asistencia">¿Asistirás a la ceremonia/fiesta?</label>
+                <select id="asistencia" name="asistencia" required>
+                    <option value="Sí, asistiré">¡Sí, ahí estaré!</option>
+                    <option value="No podré asistir">Lo siento, no podré asistir</option>
+                </select>
+            </div>
+
+            <div>
+                <label for="acompanantes">Número de acompañantes:</label>
+                <input type="number" id="acompanantes" name="acompanantes" min="0" max="5" value="0">
+            </div>
+
+            <button type="submit" class="btn-submit">Confirmar Registro</button>
+        </form>
+
+        <div id="mensaje-confirmacion"></div>
+    </div>
+
+    <!-- Reproductor de Música Oculto -->
+    <audio id="bgMusic" loop>
+        <source src="Immortals.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- Botón Flotante para Controlar la Música -->
+    <button id="musicToggle" class="music-btn" onclick="toggleAudio()">🎵</button>
+
+    <script>
+        const audio = document.getElementById('bgMusic');
+        const musicBtn = document.getElementById('musicToggle');
+
+        // Función para abrir la carta y activar la música
+        function openInvitation() {
+            document.getElementById('envelopeOverlay').classList.add('opened');
+            document.getElementById('mainContainer').classList.add('visible');
+
+            // Reproducir música tras la interacción del usuario
+            audio.play().then(() => {
+                musicBtn.innerText = '🔊';
+            }).catch(err => {
+                console.log("Autoplay bloqueado por el navegador:", err);
+            });
+        }
+
+        // Lógica para pausar/reproducir la música manualmente
+        function toggleAudio() {
+            if (audio.paused) {
+                audio.play();
+                musicBtn.innerText = '🔊';
+            } else {
+                audio.pause();
+                musicBtn.innerText = '🎵';
+            }
+        }
+
+        // Lógica de Cuenta Regresiva (26 Dic 2026 12:00 PM)
+        const targetDate = new Date("2026-12-26T12:00:00").getTime();
+
+        function updateCountdown() {
+            const now = new Date().getTime();
+            const difference = targetDate - now;
+
+            if (difference > 0) {
+                const d = Math.floor(difference / (1000 * 60 * 60 * 24));
+                const h = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const m = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+                const s = Math.floor((difference % (1000 * 60)) / 1000);
+
+                document.getElementById("days").innerText = d < 10 ? '0' + d : d;
+                document.getElementById("hours").innerText = h < 10 ? '0' + h : h;
+                document.getElementById("minutes").innerText = m < 10 ? '0' + m : m;
+                document.getElementById("seconds").innerText = s < 10 ? '0' + s : s;
+            }
+        }
+        setInterval(updateCountdown, 1000);
+        updateCountdown();
+
+        // Lógica del Formulario RSVP (Sin Teléfono)
+        const form = document.getElementById('rsvpForm');
+        const mensaje = document.getElementById('mensaje-confirmacion');
+
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const payload = {
+                nombre: document.getElementById('nombre').value,
+                asistencia: document.getElementById('asistencia').value,
+                acompanantes: document.getElementById('acompanantes').value,
+                fecha_registro: new Date().toLocaleString("es-PE")
+            };
+
+            mensaje.style.display = 'block';
+            mensaje.className = '';
+            mensaje.innerText = 'Enviando confirmación...';
+
+            try {
+                const response = await fetch('https://n8n.polirc.edu.pe/webhook/asistencia-promo', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                if (response.ok) {
+                    mensaje.className = 'exito';
+                    mensaje.innerText = '¡Gracias! Tu asistencia ha sido registrada con éxito.';
+                    confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+                    form.reset();
+                } else {
+                    throw new Error();
+                }
+            } catch (err) {
+                mensaje.className = 'error';
+                mensaje.innerText = 'Hubo un problema al enviar tu confirmación. Inténtalo nuevamente.';
+            }
+        });
+    </script>
+</body>
+</html>
